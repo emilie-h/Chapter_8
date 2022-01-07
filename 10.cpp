@@ -1,8 +1,95 @@
 #include <iostream>
 #include <vector>
 #include <list>
-#include "Collection.h"
 using namespace std;
+
+template< typename T, template<typename, typename> class Container>
+class Collection {
+public:
+	Collection<T, Container>;
+	friend ostream& operator<<(ostream& os, const Collection& a){
+		os << '[';
+
+		for(auto i = a.v.begin(); i < a.v.end(); ++i){
+			os << *i;
+			if(i != a.v.end() - 1){
+				os << ',';
+			}
+		}
+		os << ']';
+		return os;
+	}
+	void add(const T& element);
+	size_t size();
+	void clear();
+	T get(size_t index);
+private:
+	std::vector<T> v;
+};
+
+template< typename T, template<typename, typename> class Container>
+void Collection<T, Container>::add(const T& element) {
+	v.push_back(element);
+}
+template< typename T, template<typename, typename> class Container>
+size_t Collection<T, Container>::size(){
+	return v.size();
+}
+template< typename T, template<typename, typename> class Container>
+void Collection<T, Container>::clear(){
+	v.clear();
+}
+
+template< typename T, template<typename, typename> class Container>
+T Collection<T, Container>::get(size_t index){
+	return v.at(index);
+}
+
+template<template<typename, typename> class Container>
+class Collection<std::string, Container>{
+public:
+	Collection<string, Container>;
+	friend ostream& operator<<(ostream& os, const Collection& a){
+		os << '[';
+
+		for(auto i = a.l.begin(); i != a.l.end(); ++i){
+			if(i != a.l.end()){
+				os << *i;
+				os << ',';
+			}
+		}
+		os << ']';
+		return os;
+	}
+	void add(const string& element);
+	size_t size();
+	void clear();
+	string get(size_t index);
+private:
+	list<string> l;
+};
+
+template<template<typename, typename > class Container>
+void Collection<string, Container>::add(const string& element){
+	l.push_back(element);
+}
+
+template<template<typename, typename> class Container>
+size_t Collection<string, Container>::size(){
+	return l.size();
+}
+
+template< template<typename, typename> class Container>
+void Collection<string, Container>::clear(){
+	l.clear();
+}
+
+template<template<typename, typename> class Container>
+string Collection<string, Container>::get(size_t index){
+	auto it = l.begin();
+	advance(it, index);
+	return *it;
+}
 
 int main() {
 	Collection<int, vector> integers;
